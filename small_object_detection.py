@@ -1,6 +1,8 @@
 from assistClass import *
 import numpy as np
+from scipy.stats import norm
 import math
+import sys
 
 # print(a.loadFrame(1))
 
@@ -125,6 +127,8 @@ def detectSmallObj(beforeFrame, currentFrame, nextFrame):
 
 
 
+
+
             goodBefore.append(goodBX)
             goodNext.append(goodNX)
 
@@ -132,25 +136,83 @@ def detectSmallObj(beforeFrame, currentFrame, nextFrame):
         allGoodBefore.append(goodBefore)
         allGoodNext.append(goodNext)
 
+    afterLogicalAnd = np.logical_and(goodImageB,goodImageN)
+    afterLogicalAnd = afterLogicalAnd.astype(np.uint8)
+    afterLogicalAnd = afterLogicalAnd
+    # print(type(afterLogicalAnd[0][0]))
+    # for i in afterLogicalAnd:
+    #     for j in i:
+    #         if j == 1:
+    #             print("yes")
+    # print(afterLogicalAnd)
+
+    # return afterLogicalAnd
+    # np.set_printoptions(threshold=sys.maxsize)
+    # cv.imshow('i',afterLogicalAnd)
+    # cv.imshow('j', goodImageB)
+    # cv.imshow('k', goodImageN)
+    # cv.waitKey(0)
+    # cv.destroyAllWindows()
+    # np.set_printoptions(threshold=sys.maxsize)
+    # print(type(goodImageB[0][0]))
 
 
 
 
-    # cv.imshow('i', goodImageB)
-    # cv.imshow('j', goodImageN)
-    #
-    #
-    #
+
+    return afterLogicalAnd, imgHeight, imgWidth
+
+
+
+def candidateMatchDiscrim(binaryImg, imgHeight, imgWidth, frame):
+
+    temp = binaryImg.copy()
+    windowSize = 11
+
+    contours, hierarchy = cv.findContours(temp, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+    print(len(contours))
+    # cv.imshow('img1', temp)
+    # cv.drawContours(temp, contours, -1, (0,255,0), 3)
+    # cv.imshow('img', temp)
+
+    # cv.drawContours(frame, contours, -1, (0, 255, 0), 3)
+
+    for c in contours:
+        M = cv.moments(c)
+        if M["m00"] != 0:
+
+            cX = int(M["m10"] / M["m00"])
+            cY = int(M["m01"] / M["m00"])
+
+            # windowValues = np.zeros((11,11))
+            # for row in range(cY-5, cY+6):
+            #     for col in range(cX-5, cX+6):
+            #         windowValues[row][col] = binaryImg[row][col]
+
+            if cX >= 5 and cX <= width-6 and cY >= 5 and cY <= height-6:
+                windowValues = binaryImg[cY-5:cY+6, cX-5:cX+6].copy()
+                allOnes = windowValues[windowValues == 1]
+
+
+                mean = np.mean(allOnes)
+                std = np.std(allOnes)
+                print(mean, std)
+                # norm.ppf(0.95, mean, std)
+
+
+
+            # cv.circle(frame, (cX, cY), 1, (255, 255, 255), -1)
+
+
+    # cv.imshow('frame',frame)
     # cv.waitKey(0)
     # cv.destroyAllWindows()
 
 
 
-
-
-
-a = Image("001", "car")
+a = Image("001", "car", [])
 a.getImagesPath()
 a.getFrameRange()
 a.parser.getGTInformation()
-print(detectSmallObj(a.loadFrame(1), a.loadFrame(2), a.loadFrame(3)))
+img, height, width = detectSmallObj(a.loadFrame(1), a.loadFrame(2), a.loadFrame(3))
+candidateMatchDiscrim(img, height, width, a.loadFrame(1))

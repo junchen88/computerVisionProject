@@ -29,8 +29,8 @@ class Parser:
 
 class Image:
 
-    def __init__(self, imageName, imageType):
-        self.frameRange = -1
+    def __init__(self, imageName, imageType, frameRange):
+        self.frameRange = frameRange
         self.imageName = imageName
         self.imageType = imageType
         self.parser = Parser(imageName, imageType)
@@ -41,7 +41,7 @@ class Image:
 
     def loadFrame(self, frame):
 
-        if frame >= 1 and frame <= self.frameRange:
+        if frame >= 1 and frame <= self.frameRange[-1]:
             img = cv.imread(self.allImagePath[frame-1])
 
             return img
@@ -50,4 +50,6 @@ class Image:
             quit()
 
     def getFrameRange(self):
-        self.frameRange = len(self.allImagePath)
+        #IF NO FRAME RANGE IS PROVIDED
+        if not self.frameRange:
+            self.frameRange = [0, len(self.allImagePath)]
