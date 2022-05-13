@@ -1,6 +1,7 @@
 from assistClass import *
 import numpy as np
 from scipy.stats import norm
+import skimage
 import math
 import sys
 
@@ -67,6 +68,7 @@ def detectSmallObj(beforeFrame, currentFrame, nextFrame):
     #TO STORE ALL OUTLIERS AS THE ACTUAL IMAGE
     goodImageB = np.zeros((imgHeight, imgWidth))
     goodImageN = np.zeros((imgHeight, imgWidth))
+
 
 
     #FOR EACH 30X30, WE CONVERT TO GRAY AND FIND THE DIFFERENCE
@@ -136,9 +138,10 @@ def detectSmallObj(beforeFrame, currentFrame, nextFrame):
         allGoodBefore.append(goodBefore)
         allGoodNext.append(goodNext)
 
+    #AFTER THE AND LOGICAL OPERATION ON THE TWO BINARY IMG
     afterLogicalAnd = np.logical_and(goodImageB,goodImageN)
     afterLogicalAnd = afterLogicalAnd.astype(np.uint8)
-    afterLogicalAnd = afterLogicalAnd
+    # afterLogicalAnd = afterLogicalAnd
     # print(type(afterLogicalAnd[0][0]))
     # for i in afterLogicalAnd:
     #     for j in i:
@@ -160,44 +163,43 @@ def detectSmallObj(beforeFrame, currentFrame, nextFrame):
 
 
 
-    return afterLogicalAnd, imgHeight, imgWidth
+    return afterLogicalAnd, imgHeight, imgWidth,
 
 
 
-def candidateMatchDiscrim(binaryImg, imgHeight, imgWidth, frame):
+def candidateMatchDiscrim(binaryImg, imgHeight, imgWidth, nextFrame):
 
-    temp = binaryImg.copy()
-    windowSize = 11
+    # windowSize = 11
 
-    contours, hierarchy = cv.findContours(temp, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
-    print(len(contours))
-    # cv.imshow('img1', temp)
-    # cv.drawContours(temp, contours, -1, (0,255,0), 3)
-    # cv.imshow('img', temp)
-
-    # cv.drawContours(frame, contours, -1, (0, 255, 0), 3)
-
-    for c in contours:
-        M = cv.moments(c)
-        if M["m00"] != 0:
-
-            cX = int(M["m10"] / M["m00"])
-            cY = int(M["m01"] / M["m00"])
-
-            # windowValues = np.zeros((11,11))
-            # for row in range(cY-5, cY+6):
-            #     for col in range(cX-5, cX+6):
-            #         windowValues[row][col] = binaryImg[row][col]
-
-            if cX >= 5 and cX <= width-6 and cY >= 5 and cY <= height-6:
-                windowValues = binaryImg[cY-5:cY+6, cX-5:cX+6].copy()
-                allOnes = windowValues[windowValues == 1]
-
-
-                mean = np.mean(allOnes)
-                std = np.std(allOnes)
-                print(mean, std)
-                # norm.ppf(0.95, mean, std)
+    # contours, hierarchy = cv.findContours(temp, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+    # print(len(contours))
+    # # cv.imshow('img1', temp)
+    # # cv.drawContours(temp, contours, -1, (0,255,0), 3)
+    # # cv.imshow('img', temp)
+    #
+    # # cv.drawContours(frame, contours, -1, (0, 255, 0), 3)
+    #
+    # for c in contours:
+    #     M = cv.moments(c)
+    #     if M["m00"] != 0:
+    #
+    #         cX = int(M["m10"] / M["m00"])
+    #         cY = int(M["m01"] / M["m00"])
+    #
+    #         # windowValues = np.zeros((11,11))
+    #         # for row in range(cY-5, cY+6):
+    #         #     for col in range(cX-5, cX+6):
+    #         #         windowValues[row][col] = binaryImg[row][col]
+    #
+    #         if cX >= 5 and cX <= width-6 and cY >= 5 and cY <= height-6:
+    #             windowValues = binaryImg[cY-5:cY+6, cX-5:cX+6].copy()
+    #             allOnes = windowValues[windowValues == 1]
+    #
+    #
+    #             mean = np.mean(allOnes)
+    #             std = np.std(allOnes)
+    #             print(mean, std)
+    #             # norm.ppf(0.95, mean, std)
 
 
 
@@ -208,11 +210,72 @@ def candidateMatchDiscrim(binaryImg, imgHeight, imgWidth, frame):
     # cv.waitKey(0)
     # cv.destroyAllWindows()
 
+    temp = binaryImg.copy()
+
+    labelImg, numClusters = skimage.measure.label(temp, return_num=True)
+    listOfCluster = skimage.measure.regionprops(labelImg)
+    nextGray = cv.cvtColor(nextFrame, cv.COLOR_BGR2GRAY)
+
+    for cluster in listOfCluster:
+        centroid = cluster.centroid
+
+        cX = int(centroid[0])
+        cY = int(centroid[1])
+        cYMin = cY-5
+        cYMax = cY+6
+        cXMin = cX-5
+        cXMax = cX+6
+        windowValues = None
+        if cX >= 5 and cX <= width-6 and cY >= 5 and cY <= height-6:
+            windowValues = nextGray[cXMin:cXMax, cYMin:cYMax].copy()
+
+            allClusterCoor = cluster.coords
+            # print(allClusterCoor)
+            sum = 0
+            allClusterVal = np.zeros(len(allClusterCoor))
+            for i, coor in enumerate(allClusterCoor):
+                # print(coor)
+                sum += nextGray[coor[0]][coor[1]]
+                allClusterVal[i] = nextGray[coor[0]][coor[1]]
+
+
+#####       DONT KNOW THIS (THE MEAN AND STANDARD DEVIATION PART)
+______________________________________________________
+            mean = sum/len(allClusterCoor)
+            std = np.std(allClusterVal)
+
+
+            if std != 0:
+                ppf = norm.ppf(0.9975)
+
+                upperBound = mean + ppf*std
+                lowerBound = mean - ppf*std
+#__________________________________________________________________
+###################################################################
+
+                #A MASK OF TRUE FALSE + APPLY OR TO EXPAND THE CLUSTER
+                goodIndex = np.logical_and(windowValues>=lowerBound, windowValues<=upperBound)
+                target = np.logical_or(binaryImg[cXMin:cXMax, cYMin:cYMax], goodIndex)
+
+                print(lowerBound)
+                print(upperBound)
+                print(goodIndex)
+                print(windowValues)
+                print(binaryImg[cXMin:cXMax, cYMin:cYMax])
+
+                #FOR TESTING
+                break
+
+
+
+
+
+
 
 
 a = Image("001", "car", [])
 a.getImagesPath()
 a.getFrameRange()
 a.parser.getGTInformation()
-img, height, width = detectSmallObj(a.loadFrame(1), a.loadFrame(2), a.loadFrame(3))
-candidateMatchDiscrim(img, height, width, a.loadFrame(1))
+img, height, width,  = detectSmallObj(a.loadFrame(1), a.loadFrame(2), a.loadFrame(3))
+candidateMatchDiscrim(img, height, width, a.loadFrame(2))
