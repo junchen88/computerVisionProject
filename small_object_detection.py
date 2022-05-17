@@ -1,6 +1,7 @@
 from assistClass import *
 import numpy as np
 from scipy.stats import norm
+import scipy.ndimage
 import skimage
 import math
 import sys
@@ -213,8 +214,14 @@ def candidateMatchDiscrim(binaryImg, imgHeight, imgWidth, nextFrame):
     temp = binaryImg.copy()
 
     labelImg, numClusters = skimage.measure.label(temp, return_num=True)
-    listOfCluster = skimage.measure.regionprops(labelImg)
+
+    # structure = [[1,1,1], [1,1,1], [1,1,1]]
+    # labelImg, numClusters = scipy.ndimage.label(temp, structure)
+    print(numClusters)
     nextGray = cv.cvtColor(nextFrame, cv.COLOR_BGR2GRAY)
+    listOfCluster = skimage.measure.regionprops(labelImg, intensity_image=nextGray)
+
+
 
     for cluster in listOfCluster:
         centroid = cluster.centroid
@@ -230,22 +237,26 @@ def candidateMatchDiscrim(binaryImg, imgHeight, imgWidth, nextFrame):
             windowValues = nextGray[cXMin:cXMax, cYMin:cYMax].copy()
 
             allClusterCoor = cluster.coords
-            # print(allClusterCoor)
             sum = 0
             allClusterVal = np.zeros(len(allClusterCoor))
             for i, coor in enumerate(allClusterCoor):
                 # print(coor)
                 sum += nextGray[coor[0]][coor[1]]
                 allClusterVal[i] = nextGray[coor[0]][coor[1]]
-
+                # print(i)
 
 #####       DONT KNOW THIS (THE MEAN AND STANDARD DEVIATION PART)
-______________________________________________________
+##______________________________________________________
+
             mean = sum/len(allClusterCoor)
             std = np.std(allClusterVal)
 
 
             if std != 0:
+                # print(std)
+                # print(mean)
+                # print(allClusterCoor)
+
                 ppf = norm.ppf(0.9975)
 
                 upperBound = mean + ppf*std
@@ -255,23 +266,60 @@ ______________________________________________________
 
                 #A MASK OF TRUE FALSE + APPLY OR TO EXPAND THE CLUSTER
                 goodIndex = np.logical_and(windowValues>=lowerBound, windowValues<=upperBound)
-                target = np.logical_or(binaryImg[cXMin:cXMax, cYMin:cYMax], goodIndex)
+                target = np.logical_or(binaryImg[cXMin:cXMax, cYMin:cYMax], goodIndex).astype(np.uint8)
 
-                print(lowerBound)
-                print(upperBound)
-                print(goodIndex)
-                print(windowValues)
-                print(binaryImg[cXMin:cXMax, cYMin:cYMax])
+                #UPDATES BINARY IMG
+                binaryImg[cXMin:cXMax, cYMin:cYMax] = target
 
-                #FOR TESTING
-                break
+                #GETS THE CENTROID AND ECCENTRICITY OF THE NEW GROWED CLUSTER
+                targetLabel, targetNum = skimage.measure.label(target, return_num=True)
 
+                allWindowClusters = skimage.measure.regionprops(targetLabel, intensity_image=nextGray[cXMin:cXMax, cYMin:cYMax])
 
 
+                #CHECK THE LABEL OF THE CENTRE ELEMENT (THE CLUSTER WE WANTED)
+                wantedLabel = targetLabel[5][5] - 1
+
+                targetCluster = allWindowClusters[wantedLabel]
+                targetCentroid = targetCluster.centroid
+                targetEccentricity = targetCluster.eccentricity
+
+                #TODO:MORE WORK NEEDED HERE FOR upper and lower threshold for morphological cues
 
 
 
 
+
+
+    temp = binaryImg.copy()
+    # labelImg, numClusters = skimage.measure.label(temp, return_num=True)
+    # listOfCluster = skimage.measure.regionprops(labelImg, intensity_image=nextGray)
+
+
+    binaryImg = binaryImg*255
+    cv.imshow("target",binaryImg)
+    cv.waitKey(0)
+    cv.destroyAllWindows()
+    # print(lowerBound)
+    # print(upperBound)
+    # print(goodIndex)
+    # print(windowValues)
+    # print(binaryImg[cXMin:cXMax, cYMin:cYMax])
+
+
+
+#GOOD another way! should get the same result as above_________________________________________________________________________________________
+    # allStd = scipy.ndimage.standard_deviation(nextGray, labelImg, index=np.arange(1, numClusters+1))
+    # allSum = scipy.ndimage.sum_labels(nextGray, labelImg, index=np.arange(1, numClusters+1))
+    # allMean = scipy.ndimage.mean(nextGray, labelImg, index=np.arange(1, numClusters+1))
+    # print(allSum[14])
+    # print(allStd[14])
+    # print(allMean[14])
+    # print(nextGray[5][248] + nextGray[6][249])
+#______________________________________________________________________________________________________
+
+
+    return #TODO:A LIST OF BOUNDING BOX AND CENTROID FOR EACH CLUSTER IN THE FRAME
 
 a = Image("001", "car", [])
 a.getImagesPath()
