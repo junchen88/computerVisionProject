@@ -317,11 +317,11 @@ class Detector():
         if len(listOfCentroids) == 0:
             print('no matching found in detection step')
 
-        return listOfBoundBox, listOfCentroids, precision, recall, F1
+        return listOfBoundBox, listOfCentroids, precision, recall, F1, truePositive, falsePositive, falseNegative
 
 
 
     def detectObjAndDiscrim(self):
         self.detectSmallObj()
-        boxes, centroids, precision, recall, F1 = self.candidateMatchDiscrim()
-        return boxes, centroids, precision, recall, F1
+        boxes, centroids, precision, recall, F1, truePositive, falsePositive, falseNegative = self.candidateMatchDiscrim()
+        return boxes, centroids, precision, recall, F1, truePositive, falsePositive, falseNegative

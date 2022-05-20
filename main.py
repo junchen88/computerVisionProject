@@ -127,10 +127,13 @@ class myApp(Ui_Dialog):
             #INITIALISE TRACKER FOR TRACKING
             tracker = Tracker(STARTINGID, positionSTD, velocitySTD, accelerationSTD, movingObjSTD)
 
-            #STORED ALL THE VALUES FOR PRINTING CHART
+            #TO STORE ALL THE VALUES FOR PRINTING CHART, EACH ELEMENT = FOR EACH FRAME
             listOfPrecision = []
             listOfRecall = []
             listOfF1 = []
+            listOfTruePositive = []
+            listOfFalsePositive = []
+            listOfFalseNegative = []
 
             #GO THROUGH EACH FRAME ACCORDING TO THE FRAME RANGE
             for i in range(frameRange[0]+1, frameRange[1]):
@@ -138,20 +141,28 @@ class myApp(Ui_Dialog):
 
                 detector = Detector(imageParser.loadFrame(i-1), imageParser.loadFrame(i), imageParser.loadFrame(i+1), cueLowerBound, cueUpperBound, gtInform, i)
 
-                boxes, centroids, precision, recall, F1 = detector.detectObjAndDiscrim()
+                boxes, centroids, precision, recall, F1, truePositive, falsePositive, falseNegative = detector.detectObjAndDiscrim()
+
 
                 listOfPrecision.append(precision)
                 listOfRecall.append(recall)
                 listOfF1.append(F1)
+                listOfTruePositive.append(truePositive)
+                listOfFalsePositive.append(falsePositive)
+                listOfFalseNegative.append(falseNegative)
 
                 centroids = np.asarray(centroids)
                 # print(centroids)
                 tracker.update(centroids)
 
 
-            print('finished')
+            print('process finished, printing chart/result...')
 
+            #FOR CHART
 
+            #LOOP THROUGH EACH LIST TO GET DATA AND PRINT CHART
+
+            print('finished!')
 
 
 
