@@ -129,8 +129,7 @@ class Detector():
         xE = min(box1[2], box2[2])
         yE = min(box1[3], box2[3])
 
-        # print(box1)
-        # print(box2)
+
 
         # FIND THE AREA OF INTERSECTION
         intersectArea = max(0, xE - x + 1) * max(0, yE - y + 1)
@@ -168,7 +167,7 @@ class Detector():
             trueBox = (topLeftX, topLeftY, topLeftX+width, topLeftY+height)
             IOU = self.boxIntersectionOverUnion(trueBox, bbox)
 
-            #MATCHING FOUND
+            #MATCHING FOUND - SHOULD BE 0.7 BUT FOR SOME REASON NO DETECTION IS FOUND?
             if IOU > 0.5:
                 truePositive += 1
                 matchedTruth[i] = True
@@ -296,7 +295,6 @@ class Detector():
                     targetEccentricity = targetCluster.eccentricity
 
                     #TODO:MORE WORK NEEDED HERE FOR upper and lower threshold for morphological cues
-                    #????
 
                     truePositive, falsePositive, matchingFound = self.evaluation(targetBoundBox, truePositive, falsePositive, matchedTruth)
 

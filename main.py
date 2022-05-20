@@ -26,6 +26,8 @@ class myApp(Ui_Dialog):
         self.velocitySTDSlider.valueChanged.connect(lambda: self.writeSliderValue('velocity'))
         self.accelerationSTDSlider.valueChanged.connect(lambda: self.writeSliderValue('acceleration'))
         self.movingObjSTDSlider.valueChanged.connect(lambda: self.writeSliderValue('movingObj'))
+
+        #SLIDER TEXT BOX DEFAULT VALUE
         self.lowerBoundCueVal.setPlainText('0')
         self.upperBoundCueVal.setPlainText('0')
         self.positionSTDVal.setPlainText('0')
@@ -33,7 +35,7 @@ class myApp(Ui_Dialog):
         self.accelerationSTDVal.setPlainText('0')
         self.movingObjSTDVal.setPlainText('0')
 
-    #FOR WRITING SLIDER VALUE INTO
+    #FOR WRITING SLIDER VALUE INTO TEXT BOX
     def writeSliderValue(self, name):
 
         if name == 'lowerBound':
@@ -63,7 +65,7 @@ class myApp(Ui_Dialog):
 
 
 
-    #STARTS THE PROCESSING WHEN START BUTTIN IS PRESSED
+    #STARTS THE PROCESSING WHEN START BUTTON IS PRESSED
     def startDetect(self):
         lower = self.frameLower.toPlainText()
         status = True
@@ -73,6 +75,7 @@ class myApp(Ui_Dialog):
 
         #IF STR IS NOT EMPTY
         if lower:
+            #CHECK FOR NUMBER
             if not lower.isnumeric():
                 status = False
                 print("ERROR: NOT A NUMBER")
@@ -82,6 +85,7 @@ class myApp(Ui_Dialog):
 
         higher = self.frameHigher.toPlainText()
 
+        #IF STR IS NOT EMPTY
         if higher:
             if not higher.isnumeric():
                 status = False
@@ -90,13 +94,57 @@ class myApp(Ui_Dialog):
             else:
                 upperRange = int(higher)
 
+        if status == True:
+            if lowerRange < 0 or upperRange < 0:
+                print("ERROR: negative value range")
+                status = False
+
+
         #CHECK FOR IS LOWER RANGE < UPPERRANGE
         if status == True:
-            if lower >= higher:
+            if lowerRange >= upperRange:
                 print('ERROR: upper range < lower range')
                 status = False
 
 
+        #GETS THE VALUE OF STDs USED IN TRACKER
+        positionSTD = self.positionSTDVal.toPlainText()
+        velocitySTD = self.velocitySTDVal.toPlainText()
+        accelerationSTD = self.accelerationSTDVal.toPlainText()
+        movingObjSTD = self.movingObjSTDVal.toPlainText()
+
+        #IF EITHER STRING IS NOT EMPTY (EMPTY = FALSE), ELSE PRINT ERROR AND QUIT
+        if positionSTD and velocitySTD and accelerationSTD and movingObjSTD:
+
+            if not positionSTD.isnumeric():
+                print("ERROR: STD NOT A NUMBER")
+                status = False
+
+            if not velocitySTD.isnumeric():
+                print("ERROR: STD NOT A NUMBER")
+                status = False
+
+            if not accelerationSTD.isnumeric():
+                print("ERROR: STD NOT A NUMBER")
+                status = False
+
+            if not movingObjSTD.isnumeric():
+                print("ERROR: STD NOT A NUMBER")
+                status = False
+
+        else:
+            print('ERROR: EMPTY STD TEXT BOX VALUE')
+            status = False
+
+        #CONVERT TO FLOAT IF IT IS NUMERIC
+        if status == True:
+            positionSTD = float(positionSTD)
+            velocitySTD = float(velocitySTD)
+            accelerationSTD = float(accelerationSTD)
+            movingObjSTD = float(movingObjSTD)
+
+
+        #MAIN EXECUTION
         if status == True:
             imgName = self.imageName.toPlainText()
             objType = self.objectType.toPlainText()
@@ -111,39 +159,13 @@ class myApp(Ui_Dialog):
             imageParser.getFrameRange()
             gtInform = imageParser.parser.getGTInformation()
             frameRange = imageParser.frameRange
+            #IMG PARSER NOW CONTAINS THE PATH TO FRAME, CAN
+            #USE LOADFRAME() TO GET THE SPECIFIC FRAME
+
 
             cueLowerBound = float(self.lowerBoundCueVal.toPlainText())
             cueUpperBound = float(self.upperBoundCueVal.toPlainText())
 
-            #IMG PARSER NOW CONTAINS THE PATH TO FRAME, CAN
-            #USE LOADFRAME() TO GET THE SPECIFIC FRAME
-
-            #GETS THE VALUE OF STDs USED IN TRACKER
-            positionSTD = self.positionSTDVal.toPlainText()
-            velocitySTD = self.velocitySTDVal.toPlainText()
-            accelerationSTD = self.accelerationSTDVal.toPlainText()
-            movingObjSTD = self.movingObjSTDVal.toPlainText()
-
-            if not positionSTD.isnumeric():
-                print("ERROR: STD NOT A NUMBER")
-                quit()
-
-            if not velocitySTD.isnumeric():
-                print("ERROR: STD NOT A NUMBER")
-                quit()
-
-            if not accelerationSTD.isnumeric():
-                print("ERROR: STD NOT A NUMBER")
-                quit()
-
-            if not movingObjSTD.isnumeric():
-                print("ERROR: STD NOT A NUMBER")
-                quit()
-
-            positionSTD = float(positionSTD)
-            velocitySTD = float(velocitySTD)
-            accelerationSTD = float(accelerationSTD)
-            movingObjSTD = float(movingObjSTD)
 
             #INITIALISE TRACKER FOR TRACKING
             tracker = Tracker(STARTINGID, positionSTD, velocitySTD, accelerationSTD, movingObjSTD)
@@ -162,8 +184,8 @@ class myApp(Ui_Dialog):
 
                 detector = Detector(imageParser.loadFrame(i-1), imageParser.loadFrame(i), imageParser.loadFrame(i+1), cueLowerBound, cueUpperBound, gtInform, i)
 
+                #BOXES = BOUNDING BOXES, CENTROIDS = LIST OF CENTROIDS,(FOR KALMAN) PRECISION RECALL AND F1 IS DATA FOR CHART
                 boxes, centroids, precision, recall, F1, truePositive, falsePositive, falseNegative = detector.detectObjAndDiscrim()
-
 
                 listOfPrecision.append(precision)
                 listOfRecall.append(recall)
@@ -173,13 +195,14 @@ class myApp(Ui_Dialog):
                 listOfFalseNegative.append(falseNegative)
 
                 centroids = np.asarray(centroids)
-                # print(centroids)
+
+                #UPDATE/ADD/DELETE TRACKS
                 tracker.update(centroids)
 
 
             print('process finished, printing chart/result...')
 
-            #FOR CHART
+            #TODO:FOR CHART
 
             #LOOP THROUGH EACH LIST TO GET DATA AND PRINT CHART
 
@@ -187,11 +210,7 @@ class myApp(Ui_Dialog):
 
 
 
-
-
-
-
-
+#FOR RUNNNING THE MAIN APP
 if __name__ == '__main__':
 
     app = QtWidgets.QApplication(sys.argv)
@@ -201,19 +220,3 @@ if __name__ == '__main__':
     # ui.setupUi(Dialog)
     Dialog.show()
     sys.exit(app.exec_())
-
-
-
-    # tracker = Tracker(STARTINGID)
-    #
-    #
-    # for i in range(1, noOfFrames-1)
-    #
-    #
-    #     detector = Detector(allFrames[i-1], allFrames[i], allFrames[i+1])
-    #
-    #     centroid = detector.detectObjAndDiscrim()
-    #
-    #     tracker.Update(centroid)
-
-main()

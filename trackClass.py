@@ -60,18 +60,12 @@ class Tracker():
         #If a track is unassigned, the object does not appear.
         assigningCost = self.assigningCost
 
-        tempD = np.zeros((noOfDetections, noOfDetections))
-        tempT = np.zeros((noOfTracks, noOfTracks))
-
-        unassignedDetectionCost = np.fill_diagonal(tempD, assigningCost)
-        unassignedTrackCost = np.fill_diagonal(tempT, assigningCost)
-
 
         cost = np.zeros((noOfTracks+noOfDetections, noOfDetections+noOfTracks))
 
         sizeOfCost = noOfTracks+noOfDetections
 
-        counterT = 0
+        #TO CREATE THE COST MATRIX
         #TO FIND THE EUCLIDEAN DIST BETWEEN PREDICTED AND DETECTED CENTROID
         #EG THE COST OF ASSIGNING A DETECTION TO A TRACK
         for row in range(sizeOfCost):
@@ -126,7 +120,7 @@ class Tracker():
                     #UNDETECTED
                     tracksWithDummyDetect.append(i)
 
-
+                #WITHIN COST MATRIX (NOT DUMMY)
                 else:
                     rowAndCol = [i, col_ind[i]]
                     assignments.append(rowAndCol)
@@ -157,7 +151,7 @@ class Tracker():
             self.trackIdCount += 1
 
 
-
+        #FOR EACH ASSIGNMENT (LINKED TRACK AND DETECTION) - ASSIGNMENT CONTAINS THE COL = DETECTION INDEX
         for i in range(len(assignments)):
 
             self.tracks[i].Kalman.predict()
