@@ -15,7 +15,7 @@ def toThirtyByThirty(img):
 
     allSmallerImg = []
     i = 0
-
+    noOfSquares = 0
     # print(len(img))
     for r in range(0,img.shape[0],30):
         #IGNORE THE LAST 5 PIXEL ATM
@@ -24,13 +24,13 @@ def toThirtyByThirty(img):
             for c in range(0,img.shape[1],30):
                 if 30*j <= len(img) - 30:
                     allSmallerImg.append(img[r:r+30, c:c+30,:])
-
+                    noOfSquares += 1
                 j+=1
 
         i+=1
 
     # print(len(allSmallerImg))
-    return allSmallerImg
+    return allSmallerImg, noOfSquares
 
 #FINDING ABS DIFFERENCE
 def differenceImage(img1, img2):
@@ -43,10 +43,10 @@ def detectSmallObj(beforeFrame, currentFrame, nextFrame):
     print("inside")
 
     #STORING ALL 30X30 INTO ONE ARRAY
-    beforeSmallerFrame = toThirtyByThirty(beforeFrame)
-    currentSmallerFrame = toThirtyByThirty(currentFrame)
-    nextSmallerFrame = toThirtyByThirty(nextFrame)
-
+    beforeSmallerFrame, noOfSquares = toThirtyByThirty(beforeFrame)
+    currentSmallerFrame, noOfSquares = toThirtyByThirty(currentFrame)
+    nextSmallerFrame, noOfSquares = toThirtyByThirty(nextFrame)
+    print(noOfSquares)
     #TO STORE THE DIFFERENCE
     beforeAndCurrent = []
     currentAndNext = []
@@ -57,7 +57,7 @@ def detectSmallObj(beforeFrame, currentFrame, nextFrame):
 
     #THE TOTAL NUMBERS OF 30X30 SQUARES IN THE IMAGE
     noOfSquares = len(nextSmallerFrame)
-
+    print("new   " + str(noOfSquares))
     #TO STORE ALL THRESHOLDS
     allThreshBefore = []
     allThreshNext = []

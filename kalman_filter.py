@@ -1,4 +1,5 @@
 from small_object_detection import *
+import scipy
 
 STDPOSITION = 0 #TODO CHANGE THIS VALUE (PAGE 8: DECIDE OUR OWN VALUES)
 STDVELOCITY = 0
@@ -48,6 +49,13 @@ def predictionKalman(trackedObj):
     for i, obj in enumerate(trackedObj)
         stateVector = obj[0]
         Pk = obj[1]
-        predictedStateVector = np.matmul(Fk,stateVector)
+        predictedStateVector = np.matmul(Fk,stateVector) #USES PRIORI STATE VECTOR
         transposeFk = np.transpose(Fk)
         predictedPk = np.matmul(np.matmul(Fk,Pk), transposeFk) + Qk
+
+
+def hypothesisKalman():
+    scipy.optimize.linear_sum_assignment()
+
+
+def localSearchAlgo():
