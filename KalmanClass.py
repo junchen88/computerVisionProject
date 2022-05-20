@@ -17,9 +17,8 @@ class Kalman():
         self.Qk = np.diag((STDPOSITION**2, STDPOSITION**2, STDVELOCITY**2, STDVELOCITY**2, STDACCELERATION**2, STDACCELERATION**2))
         self.Rk = np.array([[STDMOVINGOBJ**2,0], [0, STDMOVINGOBJ**2]])
 
-
         self.stateVector = np.array([centroid[0], centroid[1], 0, 0, 0, 0])
-        self.Pk = Qk
+        self.Pk = self.Qk
 
 
 

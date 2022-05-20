@@ -6,6 +6,8 @@ import skimage
 import math
 import sys
 
+
+#TO DETECT CLUSTERS/OBJ
 class Detector():
 
     def __init__(self, beforeFrame, currentFrame, nextFrame, lowerBound, upperBound, gtInform, frameNo):
@@ -167,7 +169,7 @@ class Detector():
             IOU = self.boxIntersectionOverUnion(trueBox, bbox)
 
             #MATCHING FOUND
-            if IOU > 0.7:
+            if IOU > 0.5:
                 truePositive += 1
                 matchedTruth[i] = True
                 matchingFound = True
@@ -289,8 +291,8 @@ class Detector():
                     #FIND THE LABEL OF THE CENTRE ELEMENT (THE CLUSTER WE WANTED)
                     wantedLabel = targetLabel[5][5] - 1
                     targetCluster = allWindowClusters[wantedLabel]
-                    targetBoundBox = (targetCluster.bbox[0] + cXMin, targetCluster.bbox[1] + cYMin, targetCluster.bbox[2] + cXMin, targetCluster.bbox[3] + cYMin)
-                    targetCentroid = (targetCluster.centroid[0] + cXMin, targetCluster.centroid[1] + cYMin)
+                    targetBoundBox = (int(targetCluster.bbox[0] + cXMin), int(targetCluster.bbox[1] + cYMin), int(targetCluster.bbox[2] + cXMin), int(targetCluster.bbox[3] + cYMin))
+                    targetCentroid = (int(targetCluster.centroid[0] + cXMin), int(targetCluster.centroid[1] + cYMin))
                     targetEccentricity = targetCluster.eccentricity
 
                     #TODO:MORE WORK NEEDED HERE FOR upper and lower threshold for morphological cues

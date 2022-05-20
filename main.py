@@ -124,6 +124,27 @@ class myApp(Ui_Dialog):
             accelerationSTD = self.accelerationSTDVal.toPlainText()
             movingObjSTD = self.movingObjSTDVal.toPlainText()
 
+            if not positionSTD.isnumeric():
+                print("ERROR: STD NOT A NUMBER")
+                quit()
+
+            if not velocitySTD.isnumeric():
+                print("ERROR: STD NOT A NUMBER")
+                quit()
+
+            if not accelerationSTD.isnumeric():
+                print("ERROR: STD NOT A NUMBER")
+                quit()
+
+            if not movingObjSTD.isnumeric():
+                print("ERROR: STD NOT A NUMBER")
+                quit()
+
+            positionSTD = float(positionSTD)
+            velocitySTD = float(velocitySTD)
+            accelerationSTD = float(accelerationSTD)
+            movingObjSTD = float(movingObjSTD)
+
             #INITIALISE TRACKER FOR TRACKING
             tracker = Tracker(STARTINGID, positionSTD, velocitySTD, accelerationSTD, movingObjSTD)
 

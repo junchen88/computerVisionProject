@@ -1,6 +1,7 @@
 import numpy as np
 from KalmanClass import Kalman
 from scipy.optimize import linear_sum_assignment
+import math
 
 
 
@@ -16,7 +17,7 @@ class Track():
         self.noOfFramesUndetected = 0
 
 
-
+#FOR TRACKING
 class Tracker():
 
     """ Tracker class that stores and update each track obj """
@@ -39,13 +40,14 @@ class Tracker():
         positionSTD = self.positionSTD
         velocitySTD = self.velocitySTD
         accelerationSTD = self.accelerationSTD
+        movingObjSTD = self.movingObjSTD
 
         # If track list is empty, then add all CENTROIDS/CLUSTERS
         # (since they will all be new as there are no trackings)
         if (self.tracks):
             for i in range(len(detectedCentroids)):
                 #ASSIGN NEW ID AND INCREMENT IT
-                track = Track(detectedCentroids[i], self.trackIdCount, positionSTD, velocitySTD, accelerationSTD)
+                track = Track(self.trackIdCount, detectedCentroids[i], positionSTD, velocitySTD, accelerationSTD, movingObjSTD)
                 self.trackIdCount += 1
                 self.tracks.append(track)
 
@@ -136,15 +138,21 @@ class Tracker():
                     rowAndCol = [col_ind[i]]
                     detectsWithDummyTrack.append(rowAndCol)
 
-
-        #TODO: SEARCH FOR UNDETECTED USING A ALGO, DISCARD IF NOT FOUND
+        #TODO: SHOULD SEARCH FOR UNDETECTED USING A ALGO, DISCARD IF NOT FOUND
+        #THIS METHOD JUST DISCARD THE TRACK WASN'T ASSIGNED TO A DETECTION
+        for i in range(len(tracksWithDummyDetect)):
+            trackIndex = tracksWithDummyDetect[i]
+            trackID = self.tracks[trackIndex].trackID
+            for j, track in enumerate(self.tracks):
+                if track.trackID == trackID:
+                    del self.tracks[j]
 
 
         #START NEW TRACKS IF THERE IS UNASSIGNED DETECTION
         for j in range(len(detectsWithDummyTrack)):
 
             detectedCentroids = np.array(detectedCentroids[j])
-            track = Track(self.trackIdCount, detectedCentroids)
+            track = Track(self.trackIdCount, detectedCentroids, positionSTD, velocitySTD, accelerationSTD, movingObjSTD)
             self.tracks.append(track)
             self.trackIdCount += 1
 
@@ -156,6 +164,6 @@ class Tracker():
 
             # self.tracks[i].skipped_frames = 0
 
-            self.tracks[i].predictedCentroid = self.tracks[i].Kalman.update(detections[assignment[i]])
+            self.tracks[i].predictedCentroid = self.tracks[i].Kalman.update(detectedCentroids[assignments[i]])
 
         print('done')
