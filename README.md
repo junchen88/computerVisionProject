@@ -23,7 +23,7 @@ Python version: 3.8.10 (tested)
 1. install python and its packages (using pip to install the packages)
 2. download mot folder (containing the images)
 3. run main.py using python
-4. assign value to STDs using slider or enter value into box
+4. assign value to STDs using slider or enter value into box (choose the best one by trying different values)
 5. enter image name - the folder number eg. 001, 002, …. 020…
 6. enter object type - the object that is going to be tracked, eg car
 7. enter frame range – the frame range needed, can leave empty if user want all frames for that image name
