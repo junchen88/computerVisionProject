@@ -1,0 +1,6 @@
+numpy
+scipy
+scikit-image
+PyQt5
+PythonQwt
+pandas
