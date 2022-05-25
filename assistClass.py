@@ -1,5 +1,5 @@
-import cv2 as cv
 import os
+import skimage
 import pandas as pd
 import numpy as np
 
@@ -95,7 +95,7 @@ class Image:
     def loadFrame(self, frame):
         frameRange = self.frameRange
         if frame >= frameRange[0] and frame <= self.frameRange[1]:
-            img = cv.imread(self.allImagePath[frame-1])
+            img = skimage.imread(self.allImagePath[frame-1])
 
             return img
 
