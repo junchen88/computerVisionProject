@@ -69,6 +69,7 @@ class myApp(Ui_Dialog):
     def startDetect(self):
         lower = self.frameLower.toPlainText()
         status = True
+        isEmpty = False
 
         lowerRange = 0
         upperRange = 0
@@ -83,6 +84,9 @@ class myApp(Ui_Dialog):
             else:
                 lowerRange = int(lower)
 
+        else:
+            isEmpty = True
+
         higher = self.frameHigher.toPlainText()
 
         #IF STR IS NOT EMPTY
@@ -94,14 +98,18 @@ class myApp(Ui_Dialog):
             else:
                 upperRange = int(higher)
 
-        if status == True:
+        else:
+            isEmpty = True
+
+
+        if status == True and not isEmpty:
             if lowerRange < 0 or upperRange < 0:
                 print("ERROR: negative value range")
                 status = False
 
 
         #CHECK FOR IS LOWER RANGE < UPPERRANGE
-        if status == True:
+        if status == True and not isEmpty:
             if lowerRange >= upperRange:
                 print('ERROR: upper range < lower range')
                 status = False
@@ -149,7 +157,8 @@ class myApp(Ui_Dialog):
             imgName = self.imageName.toPlainText()
             objType = self.objectType.toPlainText()
             frameRange = [lowerRange, upperRange]
-            if len(lower) == 0 and len(higher) == 0:
+            if isEmpty:
+                print("input frame range is empty, searching all available frames...")
                 frameRange = []
 
 
@@ -158,7 +167,7 @@ class myApp(Ui_Dialog):
             imageParser.getImagesPath()
             imageParser.getFrameRange()
             gtInform = imageParser.parser.getGTInformation()
-            frameRange = imageParser.frameRange
+            frameRange = imageParser.inputFrameRange
             #IMG PARSER NOW CONTAINS THE PATH TO FRAME, CAN
             #USE LOADFRAME() TO GET THE SPECIFIC FRAME
 

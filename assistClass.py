@@ -83,7 +83,8 @@ class Parser:
 class Image:
 
     def __init__(self, imageName, imageType, frameRange):
-        self.frameRange = frameRange
+        self.frameRange = []
+        self.inputFrameRange = frameRange
         self.imageName = imageName
         self.imageType = imageType
         self.parser = Parser(imageName, imageType)
@@ -100,10 +101,12 @@ class Image:
             return img
 
         else:
-
+            print("EXCEEDED THE RANGE OF FRAMES, PLEASE RESTART APP...")
             quit()
 
     def getFrameRange(self):
+
+        self.frameRange = [0, len(self.allImagePath)]
         #IF NO FRAME RANGE IS PROVIDED
-        if not self.frameRange:
-            self.frameRange = [0, len(self.allImagePath)]
+        if not self.inputFrameRange:
+            self.inputFrameRange = self.frameRange
