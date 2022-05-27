@@ -5,6 +5,7 @@ import scipy.ndimage
 import skimage
 import math
 import sys
+import cv2 as cv
 
 
 #TO DETECT CLUSTERS/OBJ

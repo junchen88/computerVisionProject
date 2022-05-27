@@ -96,7 +96,7 @@ class Image:
     def loadFrame(self, frame):
         frameRange = self.frameRange
         if frame >= frameRange[0] and frame <= self.frameRange[1]:
-            img = skimage.imread(self.allImagePath[frame-1])
+            img = skimage.io.imread(self.allImagePath[frame-1])
 
             return img
 

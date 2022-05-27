@@ -171,7 +171,7 @@ class myApp(Ui_Dialog):
             #IMG PARSER NOW CONTAINS THE PATH TO FRAME, CAN
             #USE LOADFRAME() TO GET THE SPECIFIC FRAME
 
-
+            print("working on frames from frame {} to frame {}...".format(frameRange[0], frameRange[1]))
             cueLowerBound = float(self.lowerBoundCueVal.toPlainText())
             cueUpperBound = float(self.upperBoundCueVal.toPlainText())
 
