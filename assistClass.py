@@ -108,5 +108,5 @@ class Image:
 
         self.frameRange = [0, len(self.allImagePath)]
         #IF NO FRAME RANGE IS PROVIDED
-        if not self.inputFrameRange:
+        if self.inputFrameRange is None:
             self.inputFrameRange = self.frameRange
