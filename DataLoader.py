@@ -1,7 +1,7 @@
-import os
-import skimage
-import pandas as pd
 import numpy as np
+import os
+import pandas as pd
+from skimage import io
 
 class Parser:
     def __init__(self, imageName, imageType):
@@ -94,7 +94,7 @@ class FrameSetLoader:
 
     def load(self, frameIdx):
         if self.frameRange[0] <= frameIdx <= self.frameRange[1]:
-            return skimage.io.imread(self.allImagePath[frameIdx - 1])
+            return io.imread(self.allImagePath[frameIdx - 1])
 
         else:
             raise ValueError("FrameSetLoader: Attempted to load out-of-range frame")

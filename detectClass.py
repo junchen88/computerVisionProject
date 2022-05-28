@@ -1,17 +1,12 @@
-from assistClass import *
+import math
 import numpy as np
 from scipy.stats import norm
-import scipy.ndimage
-import skimage
-import math
-import sys
-
+from skimage import color
+from skimage import measure
 
 #TO DETECT CLUSTERS/OBJ
 class Detector():
-
     def __init__(self, beforeFrame, currentFrame, nextFrame, lowerBound, upperBound, gtInform, frameNo):
-
         self.currentFrameNo = frameNo-1
         self.beforeFrame = beforeFrame
         self.currentFrame = currentFrame
@@ -27,10 +22,7 @@ class Detector():
         self.cueUpperBound = upperBound
         self.gtInform = gtInform
 
-
-
     def toThirtyByThirty(self, img):
-
         allSmallerImg = []
         i = 0
 
@@ -51,34 +43,27 @@ class Detector():
         # print(len(allSmallerImg))
         return allSmallerImg, noOfSquares
 
-
     #FINDING ABS DIFFERENCE
     def differenceImage(self, img1, img2):
       a = img1-img2
       b = np.uint8(img1<img2) * 254 + 1
       return a * b
 
-
     def detectSmallObj(self):
-
         #STORING ALL 30X30 INTO ONE ARRAY
         beforeSmallerFrame, noOfSquares = self.toThirtyByThirty(self.beforeFrame)
         currentSmallerFrame, noOfSquares = self.toThirtyByThirty(self.currentFrame)
         nextSmallerFrame, noOfSquares = self.toThirtyByThirty(self.nextFrame)
 
-
-
         for i in range(noOfSquares):
             #CONVERT TO GRAYSCALE
-            beforeGray = skimage.color.rgb2gray(beforeSmallerFrame[i])
-            currentGray = skimage.color.rgb2gray(currentSmallerFrame[i])
-            nextGray = skimage.color.rgb2gray(nextSmallerFrame[i])
-
+            beforeGray = color.rgb2gray(beforeSmallerFrame[i])
+            currentGray = color.rgb2gray(currentSmallerFrame[i])
+            nextGray = color.rgb2gray(nextSmallerFrame[i])
 
             #GET ABS DIFFERENCE AND STORE THEM
             diffBefore = self.differenceImage(beforeGray, currentGray)
             diffNext = self.differenceImage(currentGray, nextGray)
-
 
             #GET THE SUM OF DIFFERENCE
             sumBefore = diffBefore.sum()
@@ -88,7 +73,6 @@ class Detector():
             threshBefore = -math.log(0.05)/(1/(sumBefore/900))
             threshNext = -math.log(0.05)/(1/(sumNext/900))
 
-
             #TO GET X, Y COORDINATE FOR THE ACTUAL IMAGE FROM 30X30 SQUARES
             pixelX = i%(self.imgWidth//30)
             pixelY = i//(self.imgHeight//30)
@@ -97,9 +81,7 @@ class Detector():
             goodImageN = self.goodImageN
 
             for y in range(30):
-
                 for x in range(30):
-
                     #WHEN A PIXEL IN THE 30X30 ith SQUARE IS HIGHER THAN THRESHOLD
                     if diffBefore[y][x] > threshBefore:
                         goodImageB[pixelY*30+y][pixelX*30+x] = 1
@@ -108,7 +90,6 @@ class Detector():
 
                     if diffNext[y][x] > threshNext:
                         goodImageN[pixelY*30+y][pixelX*30+x] = 1
-
                     else:
                         goodImageN[pixelY*30+y][pixelX*30+x] = 0
 
@@ -129,12 +110,8 @@ class Detector():
         xE = min(box1[2], box2[2])
         yE = min(box1[3], box2[3])
 
-
-
         # FIND THE AREA OF INTERSECTION
         intersectArea = max(0, xE - x + 1) * max(0, yE - y + 1)
-
-
 
         # FIND THE AREA OF BOTH THE PREDICTED AND TRUTH ONE
         box1Area = (box1[2] - box1[0] + 1) * (box1[3] - box1[1] + 1)
@@ -151,7 +128,6 @@ class Detector():
     # falsePositive   =   PROPOSED WITHOUT MATCHING
     # falseNegative   =   TRUTH WITHOUT MATCHING
     def evaluation(self, bbox, truePositive, falsePositive, matchedTruth):
-
         gtInform = self.gtInform
         currentFrameNo = self.currentFrameNo
 
@@ -180,23 +156,20 @@ class Detector():
 
         return truePositive, falsePositive, matchingFound
 
-
-
-
     def candidateMatchDiscrim(self):
 
         cueLowerBound = self.cueLowerBound
         cueUpperBound = self.cueUpperBound
 
-        currentGray = skimage.color.rgb2gray(self.currentFrame)
+        currentGray = color.rgb2gray(self.currentFrame)
 
         #BINARY IMG CONTAINING CLUSTERS
         binaryImg = self.detectSmallObj()
         temp = binaryImg.copy()
 
         #TO FIND CLUSTERS & RETURN LIST OF CLUSTER INFORMAITON
-        labelImg, numClusters = skimage.measure.label(temp, return_num=True)
-        listOfCluster = skimage.measure.regionprops(labelImg, intensity_image=currentGray)
+        labelImg, numClusters = measure.label(temp, return_num=True)
+        listOfCluster = measure.regionprops(labelImg, intensity_image=currentGray)
 
         #TO STORE THE END RESULT
         listOfBoundBox = []
@@ -217,10 +190,8 @@ class Detector():
         matchedTruth = np.full(shape=(len(self.gtInform[self.currentFrameNo])), fill_value=False)
 #_____________________________________________________________
 
-
         #FOR EACH CLUSTER
         for cluster in listOfCluster:
-
             #GETS THE CENTROID OF CLUSTER AND FIND THE 11X11 TOP LEFT & BOTTOM RIGHT
             #PIXEL LOCATION
             centroid = cluster.centroid
@@ -236,7 +207,6 @@ class Detector():
 
             #CHECKS FOR BORDER OF IMAGE TO FIT THE 11X11 WINDOW
             if cX >= 5 and cX <= width-6 and cY >= 5 and cY <= height-6:
-
                 #RECORD THE WINDOW VALUE OF THE CLUSTER
                 windowValues = currentGray[cXMin:cXMax, cYMin:cYMax].copy()
 
@@ -251,25 +221,19 @@ class Detector():
                     sum += currentGray[coor[0]][coor[1]]
                     allClusterVal[i] = currentGray[coor[0]][coor[1]]
 
-
-
                 #GETS THE NO OF PIXELS AND FIND THE MEAN + STD OF THE CLUSTER
                 #PIXELS ONLY
                 noOfPixels = cluster.area
                 mean = sum/noOfPixels
                 std = np.std(allClusterVal)
 
-
                 #NOT CONSIDERING SINGLE PIXEL CLUSTER
                 if std != 0:
-
-
                     #TWO TAIL TEST 0.05 TO 0.995
                     ppf = norm.ppf(0.9975)
 
                     upperBound = mean + ppf*std
                     lowerBound = mean - ppf*std
-
 
                     #A MASK OF TRUE FALSE + APPLY OR TO EXPAND THE CLUSTER
                     goodIndex = np.logical_and(windowValues>=lowerBound, windowValues<=upperBound)
@@ -278,14 +242,11 @@ class Detector():
                     #UPDATES BINARY IMG
                     binaryImg[cXMin:cXMax, cYMin:cYMax] = target
 
-
-
-
                     #Morphological cues
 
                     #TO GET THE CENTROID AND ECCENTRICITY OF THE NEW GROWED CLUSTER
-                    targetLabel, targetNum = skimage.measure.label(target, return_num=True)
-                    allWindowClusters = skimage.measure.regionprops(targetLabel, intensity_image=currentGray[cXMin:cXMax, cYMin:cYMax])
+                    targetLabel, targetNum = measure.label(target, return_num=True)
+                    allWindowClusters = measure.regionprops(targetLabel, intensity_image=currentGray[cXMin:cXMax, cYMin:cYMax])
 
                     #FIND THE LABEL OF THE CENTRE ELEMENT (THE CLUSTER WE WANTED)
                     wantedLabel = targetLabel[5][5] - 1
@@ -310,7 +271,6 @@ class Detector():
         recall = truePositive/(truePositive+falseNegative)
         if truePositive == 0:
             F1 = math.inf
-
         else:
             F1 = 2*(precision*recall)/(precision+recall)
 
@@ -318,8 +278,6 @@ class Detector():
             print('no matching found in detection step')
 
         return listOfBoundBox, listOfCentroids, precision, recall, F1, truePositive, falsePositive, falseNegative
-
-
 
     def detectObjAndDiscrim(self):
         self.detectSmallObj()

@@ -1,16 +1,7 @@
-
 import numpy as np
 
-
-
-
-
-
 class Kalman():
-
-
     def __init__(self, centroid, STDPOSITION, STDVELOCITY, STDACCELERATION, STDMOVINGOBJ):
-
         self.Fk = np.array([[1,0,1,0,1/2,0],[0,1,0,1,0,1/2],[0,0,1,0,1,0],[0,0,0,1,0,1],[0,0,0,0,1,0],[0,0,0,0,0,1]])
         self.Hk = np.array([[1,0,0,0,0,0],[0,1,0,0,0,0]])
 
@@ -20,11 +11,8 @@ class Kalman():
         self.stateVector = np.array([centroid[0], centroid[1], 0, 0, 0, 0])
         self.Pk = self.Qk
 
-
-
     #KALMAN PREDICT STEP
     def predict(self):
-
         Fk = self.Fk
         Pk = self.Pk
         stateVector = self.stateVector
@@ -41,7 +29,6 @@ class Kalman():
         Pk          = self.Pk
         HkTranspose = np.transpose(Hk)
         Rk          = self.Rk
-
 
         Yk          = centroid - np.matmul(Hk, stateVector)
         Sk          = np.matmul(Hk, np.matmul(Pk,HkTransose)) + Rk
@@ -60,8 +47,3 @@ class Kalman():
 
         centroidUpdated = np.array([upDateState[0], upDateState[1]])
         return centroidUpdated
-
-
-# K = Kalman()
-#
-# print(K.Qk)
