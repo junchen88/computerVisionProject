@@ -11,7 +11,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_ControlGuiBase(object):
+class ControlGuiBase(object):
     def setupUi(self, baseDialog):
         baseDialog.setObjectName("baseDialog")
         baseDialog.setEnabled(True)

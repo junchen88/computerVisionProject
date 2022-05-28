@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QApplication, QDialog
 
-from ControlGui import Ui_ControlGui
+from ControlGui import ControlGui
 from DataLoader import FrameSetLoader
 from FrameProcessor import FrameProcessor
 from ObjectDetector import ObjectDetector
@@ -13,7 +13,7 @@ class MainApp:
 
         # Qt UI objects
         self.window = QDialog()
-        self.ui = Ui_ControlGui(self.window)
+        self.ui = ControlGui(self.window)
 
         # Bind this instance to the UI's buttons
         self.ui.setResetFunc(lambda: self.resetDetector())

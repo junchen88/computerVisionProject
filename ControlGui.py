@@ -1,7 +1,7 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QImage, QPixmap
 
-from ControlGuiBase import Ui_ControlGuiBase
+from ControlGuiBase import ControlGuiBase
 
 # Helper function: Set the text of a label automatically from the value of a
 # control when it's changed.
@@ -14,7 +14,7 @@ def tieLabelToControlValue(control, label):
     control.valueChanged.connect(valueChangedHandler)
     valueChangedHandler()
 
-class Ui_ControlGui(Ui_ControlGuiBase):
+class ControlGui(ControlGuiBase):
     def __init__(self, baseDialog):
         self.setupUi(baseDialog)
 
