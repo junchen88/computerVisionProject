@@ -1,5 +1,19 @@
 import numpy as np
 
+# Helper method: Draw a white box around a region on an image
+def drawRectOnImage(currFrame, boxSpec):
+    filler = [0, 0, 0] # black, can change
+
+    # Draw horizontal
+    for c in range(boxSpec[1], boxSpec[3]):
+        currFrame[boxSpec[0], c] = filler
+        currFrame[boxSpec[2], c] = filler
+
+    # Draw verticals
+    for r in range(boxSpec[0], boxSpec[2]):
+        currFrame[r, boxSpec[1]] = filler
+        currFrame[r, boxSpec[3]] = filler
+
 class FrameProcessor:
     def __init__(self, frames, detector, tracker):
         self.frames = frames
@@ -38,6 +52,10 @@ class FrameProcessor:
         boxes, centroids, precision, recall, F1, truePositive, falsePositive, falseNegative \
          = self.detector.discriminateCandidates(currFrame, candidates, currGroundTruth)
 
+        if boxes:
+            # Draw the bounding boxes on the frame
+            for box in boxes:
+                drawRectOnImage(currFrame, box)
         if centroids:
             print("note: Found centroids:", centroids)
 

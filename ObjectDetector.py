@@ -224,7 +224,8 @@ class ObjectDetector():
             
             # Gather morphological data
             targetArea = targetCluster.area
-            targetExtent = targetCluster.area / (targetCluster.bbox[0] * targetCluster.bbox[1])
+            targetBoxArea = (targetCluster.bbox[2] - targetCluster.bbox[0]) * (targetCluster.bbox[3] - targetCluster.bbox[1])
+            targetExtent = targetArea / targetBoxArea
             
             # Calculate eigenvalues for ellipse fitting
             # First, get a matrix of all pixel coordinates
@@ -245,6 +246,10 @@ class ObjectDetector():
             for i in range(N):
                 C[0, i] -= avgX
                 C[1, i] -= avgY
+
+            # Ignore single coordinates after region adjustment
+            if N - 1 < 1:
+                break
 
             sigma_cc = np.dot(C, np.transpose(C)) / (N - 1)
             lambda_eig, _ = np.linalg.eig(sigma_cc)
