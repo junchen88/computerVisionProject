@@ -26,9 +26,13 @@ class Ui_ControlGui(Ui_ControlGuiBase):
         tieLabelToControlValue(self.accelerationSTDSlider, self.accelerationSTDVal)
         tieLabelToControlValue(self.movingObjSTDSlider, self.movingObjSTDVal)
 
-    # Set a provided function to run when the detect button is pushed
-    def setDetectFunc(self, func):
-        self.startButton.clicked.connect(func)
+    # Set a provided function to run when the reset button is pushed
+    def setResetFunc(self, func):
+        self.resetButton.clicked.connect(func)
+
+    # Set a provided function to run when the next button is pushed
+    def setNextFunc(self, func):
+        self.nextButton.clicked.connect(func)
 
     # Get the user-provided image name and type
     def getImageDetails(self):

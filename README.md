@@ -48,7 +48,8 @@ $ python3 MainApp.py
 5. Enter the image name - the folder number (eg. 001, 002, 003, ...).
 6. Enter the object type - the object that is going to be tracked (e.g. car, plane, etc.).
 7. Enter frame range to be processed – leave both boxes blank to use the full range for that image set.
-8. Click "Start" to commence tracking.
-9. Errors in the provided parameters will cause the tracking process to abort, with a diagnostic message displayed in the terminal.
-10. The progress is also reported in the terminal as the tracking process runs.
-11. After each frame is processed, it is displayed in the main frame pane, in the top-left of the window.
+8. Click "Start" to initialize tracking.
+9. Repeatedly click "Next" to compute and display tracking data for the next frame, until all frames have been processed
+10. Errors in the provided parameters will cause the tracking process to abort, with a diagnostic message displayed in the terminal.
+11. The progress is also reported in the terminal as the tracking process runs.
+12. After each frame is processed, it is displayed in the main frame pane, in the top-left of the window.
