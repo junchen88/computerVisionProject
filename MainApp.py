@@ -1,9 +1,9 @@
 from PyQt5.QtWidgets import QApplication, QDialog
 
 from ControlGui import Ui_ControlGui
+from DataLoader import FrameSetLoader
 from FrameProcessor import FrameProcessor
 
-from assistClass import FrameSetLoader
 from trackClass import Tracker
 
 STARTINGID = 0
