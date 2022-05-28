@@ -19,12 +19,29 @@ class Ui_ControlGui(Ui_ControlGuiBase):
         self.setupUi(baseDialog)
 
         # Tie each slider to the adjacent text field for easy value entry
-        tieLabelToControlValue(self.lowerBoundCueSlider, self.lowerBoundCueVal)
-        tieLabelToControlValue(self.upperBoundCueSlider, self.upperBoundCueVal)
+        tieLabelToControlValue(self.areaLowerBoundSlider, self.areaLowerBoundVal)
+        tieLabelToControlValue(self.areaUpperBoundSlider, self.areaUpperBoundVal)
+        tieLabelToControlValue(self.extentLowerBoundSlider, self.extentLowerBoundVal)
+        tieLabelToControlValue(self.extentUpperBoundSlider, self.extentUpperBoundVal)
+        tieLabelToControlValue(self.majorLowerBoundSlider, self.majorLowerBoundVal)
+        tieLabelToControlValue(self.majorUpperBoundSlider, self.majorUpperBoundVal)
+        tieLabelToControlValue(self.eccentricLowerBoundSlider, self.eccentricLowerBoundVal)
+        tieLabelToControlValue(self.eccentricUpperBoundSlider, self.eccentricUpperBoundVal)
+
         tieLabelToControlValue(self.positionSTDSlider, self.positionSTDVal)
         tieLabelToControlValue(self.velocitySTDSlider, self.velocitySTDVal)
         tieLabelToControlValue(self.accelerationSTDSlider, self.accelerationSTDVal)
         tieLabelToControlValue(self.movingObjSTDSlider, self.movingObjSTDVal)
+
+        # Set the range for each bound slider
+        self.areaLowerBoundSlider.setRange(0, 121)
+        self.areaUpperBoundSlider.setRange(0, 121)
+        self.extentLowerBoundSlider.setRange(0, 1)
+        self.extentUpperBoundSlider.setRange(0, 1)
+        self.majorLowerBoundSlider.setRange(0, 11)
+        self.majorUpperBoundSlider.setRange(0, 11)
+        self.eccentricLowerBoundSlider.setRange(0, 1)
+        self.eccentricUpperBoundSlider.setRange(0, 1)
 
     # Set a provided function to run when the reset button is pushed
     def setResetFunc(self, func):
@@ -64,10 +81,17 @@ class Ui_ControlGui(Ui_ControlGuiBase):
 
     # Get the user-provided cue bounds
     def getCueBounds(self):
-        cueLowerBound = float(self.lowerBoundCueVal.toPlainText())
-        cueUpperBound = float(self.upperBoundCueVal.toPlainText())
+        areaLowerBound = float(self.areaLowerBoundVal.toPlainText())
+        areaUpperBound = float(self.areaUpperBoundVal.toPlainText())
+        extentLowerBound = float(self.extentLowerBoundVal.toPlainText())
+        extentUpperBound = float(self.extentUpperBoundVal.toPlainText())
+        majorLowerBound = float(self.majorLowerBoundVal.toPlainText())
+        majorUpperBound = float(self.majorUpperBoundVal.toPlainText())
+        eccentricLowerBound = float(self.eccentricLowerBoundVal.toPlainText())
+        eccentricUpperBound = float(self.eccentricUpperBoundVal.toPlainText())
 
-        return cueLowerBound, cueUpperBound
+        return areaLowerBound, areaUpperBound, extentLowerBound, extentUpperBound, \
+            majorLowerBound, majorUpperBound, eccentricLowerBound, eccentricUpperBound
 
     # Get the user-provided tracker hyperparameters
     def getTrackerParams(self):

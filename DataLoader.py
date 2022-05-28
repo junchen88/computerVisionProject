@@ -78,15 +78,13 @@ class Parser:
         return df
 
 
-
-
 class FrameSetLoader:
     def __init__(self, imageName, imageType, frameRange):
         self.parser = Parser(imageName, imageType)
         self.allImagePath = self.parser.getFilePath('img')
 
         if frameRange is None:
-            self.frameRange = [0, len(self.allImagePath)]
+            self.frameRange = [0, len(self.allImagePath) - 1]
         else:
             self.frameRange = frameRange
 
@@ -96,14 +94,14 @@ class FrameSetLoader:
 
     def load(self, frameIdx):
         if self.frameRange[0] <= frameIdx <= self.frameRange[1]:
-            return io.imread(self.allImagePath[frameIdx - 1])
+            return io.imread(self.allImagePath[frameIdx])
 
         else:
             raise ValueError("FrameSetLoader: Attempted to load out-of-range frame")
 
     def getGroundTruth(self, frameIdx):
         if self.frameRange[0] <= frameIdx <= self.frameRange[1]:
-            return self.gtInfo[frameIdx - 1]
+            return self.gtInfo[frameIdx]
 
         else:
             raise ValueError("FrameSetLoader: Ground truth index out-of-range")

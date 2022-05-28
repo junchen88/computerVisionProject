@@ -55,45 +55,6 @@
     <string>Next</string>
    </property>
   </widget>
-  <widget class="QSlider" name="positionSTDSlider">
-   <property name="geometry">
-    <rect>
-     <x>620</x>
-     <y>120</y>
-     <width>160</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-  </widget>
-  <widget class="QSlider" name="velocitySTDSlider">
-   <property name="geometry">
-    <rect>
-     <x>620</x>
-     <y>160</y>
-     <width>160</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-  </widget>
-  <widget class="QSlider" name="accelerationSTDSlider">
-   <property name="geometry">
-    <rect>
-     <x>620</x>
-     <y>200</y>
-     <width>160</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-  </widget>
   <widget class="QLabel" name="displayFrame">
    <property name="enabled">
     <bool>true</bool>
@@ -107,7 +68,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QwtTextLabel" name="ImgLabel">
+  <widget class="QwtTextLabel" name="displayFrameLabel">
    <property name="geometry">
     <rect>
      <x>210</x>
@@ -117,15 +78,275 @@
     </rect>
    </property>
    <property name="plainText">
-    <string>Frames</string>
+    <string>Frame</string>
    </property>
   </widget>
-  <widget class="QwtTextLabel" name="positionSTD">
+  <widget class="QSlider" name="areaLowerBoundSlider">
    <property name="geometry">
     <rect>
-     <x>650</x>
+     <x>490</x>
+     <y>40</y>
+     <width>160</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QSlider" name="areaUpperBoundSlider">
+   <property name="geometry">
+    <rect>
+     <x>770</x>
+     <y>40</y>
+     <width>160</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QSlider" name="extentLowerBoundSlider">
+   <property name="geometry">
+    <rect>
+     <x>490</x>
+     <y>80</y>
+     <width>160</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QSlider" name="extentUpperBoundSlider">
+   <property name="geometry">
+    <rect>
+     <x>770</x>
+     <y>80</y>
+     <width>160</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QSlider" name="majorLowerBoundSlider">
+   <property name="geometry">
+    <rect>
+     <x>490</x>
+     <y>120</y>
+     <width>160</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QSlider" name="majorUpperBoundSlider">
+   <property name="geometry">
+    <rect>
+     <x>770</x>
+     <y>120</y>
+     <width>160</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QSlider" name="eccentricLowerBoundSlider">
+   <property name="geometry">
+    <rect>
+     <x>490</x>
+     <y>160</y>
+     <width>160</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QSlider" name="eccentricUpperBoundSlider">
+   <property name="geometry">
+    <rect>
+     <x>770</x>
+     <y>160</y>
+     <width>160</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QSlider" name="positionSTDSlider">
+   <property name="geometry">
+    <rect>
+     <x>490</x>
+     <y>200</y>
+     <width>160</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QSlider" name="velocitySTDSlider">
+   <property name="geometry">
+    <rect>
+     <x>770</x>
+     <y>200</y>
+     <width>160</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QSlider" name="accelerationSTDSlider">
+   <property name="geometry">
+    <rect>
+     <x>490</x>
+     <y>240</y>
+     <width>160</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QSlider" name="movingObjSTDSlider">
+   <property name="geometry">
+    <rect>
+     <x>770</x>
+     <y>240</y>
+     <width>160</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QwtTextLabel" name="areaLowerBoundLabel">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>20</y>
+     <width>120</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="plainText">
+    <string>areaLowerBound</string>
+   </property>
+  </widget>
+  <widget class="QwtTextLabel" name="areaUpperBoundLabel">
+   <property name="geometry">
+    <rect>
+     <x>800</x>
+     <y>20</y>
+     <width>120</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="plainText">
+    <string>areaUpperBound</string>
+   </property>
+  </widget>
+  <widget class="QwtTextLabel" name="extentLowerBoundLabel">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>60</y>
+     <width>120</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="plainText">
+    <string>extentLowerBound</string>
+   </property>
+  </widget>
+  <widget class="QwtTextLabel" name="extentUpperBoundLabel">
+   <property name="geometry">
+    <rect>
+     <x>800</x>
+     <y>60</y>
+     <width>120</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="plainText">
+    <string>extentUpperBound</string>
+   </property>
+  </widget>
+  <widget class="QwtTextLabel" name="majorLowerBoundLabel">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
      <y>100</y>
-     <width>100</width>
+     <width>120</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="plainText">
+    <string>majorLowerBound</string>
+   </property>
+  </widget>
+  <widget class="QwtTextLabel" name="majorUpperBoundLabel">
+   <property name="geometry">
+    <rect>
+     <x>800</x>
+     <y>100</y>
+     <width>120</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="plainText">
+    <string>majorUpperBound</string>
+   </property>
+  </widget>
+  <widget class="QwtTextLabel" name="eccentricLowerBoundLabel">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>140</y>
+     <width>120</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="plainText">
+    <string>eccentricLowerBound</string>
+   </property>
+  </widget>
+  <widget class="QwtTextLabel" name="eccentricUpperBoundLabel">
+   <property name="geometry">
+    <rect>
+     <x>800</x>
+     <y>140</y>
+     <width>120</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="plainText">
+    <string>eccentricUpperBound</string>
+   </property>
+  </widget>
+  <widget class="QwtTextLabel" name="positionSTDLabel">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>180</y>
+     <width>120</width>
      <height>20</height>
     </rect>
    </property>
@@ -133,12 +354,12 @@
     <string>PositionSTD</string>
    </property>
   </widget>
-  <widget class="QwtTextLabel" name="velocitySTD">
+  <widget class="QwtTextLabel" name="velocitySTDLabel">
    <property name="geometry">
     <rect>
-     <x>650</x>
-     <y>140</y>
-     <width>100</width>
+     <x>800</x>
+     <y>180</y>
+     <width>120</width>
      <height>20</height>
     </rect>
    </property>
@@ -146,24 +367,141 @@
     <string>VelocitySTD</string>
    </property>
   </widget>
-  <widget class="QwtTextLabel" name="accelerationSTD">
+  <widget class="QwtTextLabel" name="accelerationSTDLabel">
    <property name="geometry">
     <rect>
-     <x>640</x>
-     <y>180</y>
-     <width>121</width>
-     <height>16</height>
+     <x>520</x>
+     <y>220</y>
+     <width>120</width>
+     <height>20</height>
     </rect>
    </property>
    <property name="plainText">
     <string>AccelerationSTD</string>
    </property>
   </widget>
+  <widget class="QwtTextLabel" name="movingObjSTDLabel">
+   <property name="geometry">
+    <rect>
+     <x>800</x>
+     <y>220</y>
+     <width>120</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="plainText">
+    <string>MovingObjSTD</string>
+   </property>
+  </widget>
+  <widget class="QPlainTextEdit" name="areaLowerBoundVal">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>30</y>
+     <width>91</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="plainText">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPlainTextEdit" name="areaUpperBoundVal">
+   <property name="geometry">
+    <rect>
+     <x>940</x>
+     <y>30</y>
+     <width>91</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="plainText">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPlainTextEdit" name="extentLowerBoundVal">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>70</y>
+     <width>91</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="plainText">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPlainTextEdit" name="extentUpperBoundVal">
+   <property name="geometry">
+    <rect>
+     <x>940</x>
+     <y>70</y>
+     <width>91</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="plainText">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPlainTextEdit" name="majorLowerBoundVal">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>110</y>
+     <width>91</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="plainText">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPlainTextEdit" name="majorUpperBoundVal">
+   <property name="geometry">
+    <rect>
+     <x>940</x>
+     <y>110</y>
+     <width>91</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="plainText">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPlainTextEdit" name="eccentricLowerBoundVal">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>150</y>
+     <width>91</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="plainText">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPlainTextEdit" name="eccentricUpperBoundVal">
+   <property name="geometry">
+    <rect>
+     <x>940</x>
+     <y>150</y>
+     <width>91</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="plainText">
+    <string/>
+   </property>
+  </widget>
   <widget class="QPlainTextEdit" name="positionSTDVal">
    <property name="geometry">
     <rect>
-     <x>820</x>
-     <y>110</y>
+     <x>660</x>
+     <y>190</y>
      <width>91</width>
      <height>31</height>
     </rect>
@@ -175,8 +513,8 @@
   <widget class="QPlainTextEdit" name="velocitySTDVal">
    <property name="geometry">
     <rect>
-     <x>820</x>
-     <y>150</y>
+     <x>940</x>
+     <y>190</y>
      <width>91</width>
      <height>31</height>
     </rect>
@@ -188,8 +526,21 @@
   <widget class="QPlainTextEdit" name="accelerationSTDVal">
    <property name="geometry">
     <rect>
-     <x>820</x>
-     <y>190</y>
+     <x>660</x>
+     <y>230</y>
+     <width>91</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="plainText">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPlainTextEdit" name="movingObjSTDVal">
+   <property name="geometry">
+    <rect>
+     <x>940</x>
+     <y>230</y>
      <width>91</width>
      <height>31</height>
     </rect>
@@ -270,7 +621,7 @@
    <property name="geometry">
     <rect>
      <x>520</x>
-     <y>670</y>
+     <y>660</y>
      <width>400</width>
      <height>200</height>
     </rect>
@@ -326,123 +677,6 @@
    </property>
    <property name="plainText">
     <string>Object Type:</string>
-   </property>
-  </widget>
-  <widget class="QSlider" name="upperBoundCueSlider">
-   <property name="geometry">
-    <rect>
-     <x>620</x>
-     <y>80</y>
-     <width>160</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-  </widget>
-  <widget class="QSlider" name="lowerBoundCueSlider">
-   <property name="geometry">
-    <rect>
-     <x>620</x>
-     <y>40</y>
-     <width>160</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-  </widget>
-  <widget class="QPlainTextEdit" name="upperBoundCueVal">
-   <property name="geometry">
-    <rect>
-     <x>820</x>
-     <y>70</y>
-     <width>91</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="plainText">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QPlainTextEdit" name="lowerBoundCueVal">
-   <property name="geometry">
-    <rect>
-     <x>820</x>
-     <y>30</y>
-     <width>91</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="plainText">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QwtTextLabel" name="qwtTextLabel">
-   <property name="geometry">
-    <rect>
-     <x>640</x>
-     <y>60</y>
-     <width>131</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="plainText">
-    <string>Upper Bound Cue</string>
-   </property>
-  </widget>
-  <widget class="QwtTextLabel" name="positionSTD_3">
-   <property name="geometry">
-    <rect>
-     <x>630</x>
-     <y>20</y>
-     <width>141</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="plainText">
-    <string>Lower Bound Cue</string>
-   </property>
-  </widget>
-  <widget class="QwtTextLabel" name="accelerationSTD_2">
-   <property name="geometry">
-    <rect>
-     <x>640</x>
-     <y>220</y>
-     <width>121</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="plainText">
-    <string>MovingObjSTD</string>
-   </property>
-  </widget>
-  <widget class="QSlider" name="movingObjSTDSlider">
-   <property name="geometry">
-    <rect>
-     <x>620</x>
-     <y>240</y>
-     <width>160</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-  </widget>
-  <widget class="QPlainTextEdit" name="movingObjSTDVal">
-   <property name="geometry">
-    <rect>
-     <x>820</x>
-     <y>230</y>
-     <width>91</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="plainText">
-    <string/>
    </property>
   </widget>
  </widget>

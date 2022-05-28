@@ -4,6 +4,8 @@ from scipy import optimize
 
 from KalmanFilter import Kalman
 
+STARTINGID = 0
+
 class Track():
     """ Track Class for each Obj"""
 
@@ -18,9 +20,9 @@ class Track():
 class TrackerState():
     """ Tracker class that stores and update each track obj """
 
-    def __init__(self, trackIDStart, positionSTD, velocitySTD, accelerationSTD, movingObjSTD):
+    def __init__(self, positionSTD, velocitySTD, accelerationSTD, movingObjSTD):
         self.tracks = []
-        self.trackIdCount = trackIDStart
+        self.trackIdCount = STARTINGID
 
         #COST OF ASSIGNING TRACK TO PSEUDO HYPOTHESIS AND HYPOTHESIS TO PSEUDO TRACK
         self.assigningCost = 10

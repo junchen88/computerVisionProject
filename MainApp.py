@@ -6,8 +6,6 @@ from FrameProcessor import FrameProcessor
 from ObjectDetector import ObjectDetector
 from ObjectTracker import TrackerState
 
-STARTINGID = 0
-
 class MainApp:
     def __init__(self, args):
         # Qt application runtime
@@ -37,9 +35,9 @@ class MainApp:
             if frameRange is None:
                 print("note: No frame range supplied, searching all available frames...")
 
-            cueLowerBound, cueUpperBound = self.ui.getCueBounds()
+            bounds = self.ui.getCueBounds()
 
-            positionSTD, velocitySTD, accelerationSTD, movingObjSTD = self.ui.getTrackerParams()
+            STDs = self.ui.getTrackerParams()
         
         except ValueError as e:
             print("error:", str(e))
@@ -50,10 +48,10 @@ class MainApp:
         gtInform = frames.parser.getGTInformation()
 
         # Initialize detector parameters
-        detector = ObjectDetector(0, 121, 0, 1, 0, 11, 0, 1)
+        detector = ObjectDetector(*bounds)
 
         # Initialize tracking state from user-supplied values
-        tracker = TrackerState(STARTINGID, positionSTD, velocitySTD, accelerationSTD, movingObjSTD)
+        tracker = TrackerState(*STDs)
 
         # Create a new frame processor primed with the current frame set
         self.processor = FrameProcessor(frames, detector, tracker)
