@@ -1,34 +1,54 @@
-https://github.com/junchen88/computerVisionProject
-# Installations needed:
+# junchen88/computerVisionProject
 
-Python version: 3.8.10 (tested)
+## Requirements
 
-**Python packages**:
+- Python 3 (version 3.10.4 tested)
+- Pip (up-to-date version required)
+- NumPy
+- SciPy
+- scikit-image
+- PyQt5
+- PythonQwt
+- pandas
+- OpenCV-Python (headless, due to PyQt5 conflict)
 
-- from PyQt5 import QtCore, QtGui, QtWidgets
+## Setup
 
-- import numpy as np
+Configure a python environment and install required packages. This works
+best in a virtual environment. An up-to-date version of `pip` is required to
+install the other packages.
 
-- from scipy.stats import norm
+- Create and enter the virtual environment:
 
-- import scipy.ndimage
+```
+$ python3 -m venv env
+$ . env/bin/activate
+```
 
-- import skimage
+- Update `pip`, then install required packages:
 
-- from scipy.optimize import linear_sum_assignment
+```
+$ pip install --upgrade pip
+$ pip install -r requirements.txt
+```
 
-**packages**: numpy, scipy, skimage, PyQt5
+The `mot` folder of the VISO data must be present in the project directory.
+The project can then be run by executing `MainApp.py` with `python3`.
 
+```
+$ python3 MainApp.py
+```
 
-## Steps to run
-1. install python and its packages (using pip to install the packages)
-2. download mot folder (containing the images) into the project folder
-3. run main.py using python in the same folder with mot
-4. assign value to STDs using slider or enter value into box (choose the best one by trying different values)
-5. enter image name - the folder number eg. 001, 002, …. 020…
-6. enter object type - the object that is going to be tracked, eg car
-7. enter frame range – the frame range needed, can leave empty if user want all frames for that image name
-8. click start to track
-9. if file is not found, program will quit and error message is displayed on terminal
-10. status is shown on terminal when the program is running
-11. click the red cross on gui to close the program
+## Running
+
+1. Configure and install dependencies as above.
+2. Download/copy the `mot` folder (containing the images) into the project folder.
+3. Run `python3 MainApp.py` in the project root directory.
+4. Assign values to STDs using the sliders or by entering a value into the input boxes. Choose the best one by trying different values.
+5. Enter the image name - the folder number (eg. 001, 002, 003, ...).
+6. Enter the object type - the object that is going to be tracked (e.g. car, plane, etc.).
+7. Enter frame range to be processed – leave both boxes blank to use the full range for that image set.
+8. Click "Start" to commence tracking.
+9. Errors in the provided parameters will cause the tracking process to abort, with a diagnostic message displayed in the terminal.
+10. The progress is also reported in the terminal as the tracking process runs.
+11. After each frame is processed, it is displayed in the main frame pane, in the top-left of the window.
