@@ -1,3 +1,6 @@
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QImage, QPixmap
+
 from ControlGuiBase import Ui_ControlGuiBase
 
 # Helper function: Set the text of a label automatically from the value of a
@@ -82,3 +85,22 @@ class Ui_ControlGui(Ui_ControlGuiBase):
         movingObjSTD = float(movingObjSTD)
 
         return positionSTD, velocitySTD, accelerationSTD, movingObjSTD
+
+    # Show frame data in the main display panel
+    def showFrame(self, array):
+        height, width, depth = array.shape
+        if depth != 3:
+            raise ValueError("Ui_ControlGui: Expected frame in RGB888 format")
+
+        # Construct the showable pixel data
+        bytesPerRow = 3 * width
+        qtImg = QImage(array.data, width, height, bytesPerRow, QImage.Format_RGB888)
+        qtPix = QPixmap(qtImg)
+
+        # Scale the image to fit the pane then display
+        targetWidth = self.displayFrame.width()
+        targetHeight = self.displayFrame.height()
+        self.displayFrame.setPixmap(
+            qtPix.scaled(targetWidth, targetHeight, Qt.KeepAspectRatio)
+        )
+

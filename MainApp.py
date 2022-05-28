@@ -1,7 +1,4 @@
 import numpy as np
-
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtWidgets import QApplication, QDialog
 
 from ControlGui import Ui_ControlGui
@@ -91,15 +88,8 @@ class MainApp:
 
             print('info: Step finished, printing result...')
 
-            imData = imageParser.loadFrame(i)
-            height, width, _ = imData.shape
-            bytesPerLine = 3 * width
-            qImg = QImage(imData.data, width, height, bytesPerLine, QImage.Format_RGB888)
-            pix = QPixmap(qImg)
-
-            w = self.ui.displayFrame.width()
-            h = self.ui.displayFrame.height()
-            self.ui.displayFrame.setPixmap(pix.scaled(w,h,Qt.KeepAspectRatio))
+            frameData = imageParser.loadFrame(i)
+            self.ui.showFrame(frameData)
 
         print('info: Finished!')
 
