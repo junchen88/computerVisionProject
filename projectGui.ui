@@ -14,7 +14,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Small Object Tracker</string>
   </property>
   <widget class="QPushButton" name="startButton">
    <property name="geometry">
@@ -68,15 +68,15 @@
     <enum>Qt::Horizontal</enum>
    </property>
   </widget>
-  <widget class="QwtPlot" name="displayFrame">
+  <widget class="QLabel" name="displayFrame">
    <property name="enabled">
     <bool>true</bool>
    </property>
    <property name="geometry">
     <rect>
-     <x>0</x>
+     <x>30</x>
      <y>30</y>
-     <width>481</width>
+     <width>451</width>
      <height>431</height>
     </rect>
    </property>
