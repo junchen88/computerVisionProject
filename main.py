@@ -2,7 +2,7 @@
 # from trackClass import Tracker
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
-from projectGui import Ui_Dialog
+from projectGui import Ui_ControlGuiBase
 from assistClass import Image
 from trackClass import Tracker
 from detectClass import Detector
@@ -11,7 +11,7 @@ import numpy as np
 STARTINGID = 0
 
 
-class myApp(Ui_Dialog):
+class myApp(Ui_ControlGuiBase):
 
     def __init__(self, window):
         self.setupUi(window)
