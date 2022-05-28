@@ -23,7 +23,7 @@ class MainApp:
     def run(self):
         return self.runtime.exec_()
     
-    #STARTS THE PROCESSING WHEN START BUTTON IS PRESSED
+    # Run the object detection process
     def startDetect(self):
         # Get all parameters from the GUI, stop if any fail
         try:

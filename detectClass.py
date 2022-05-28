@@ -5,7 +5,6 @@ import scipy.ndimage
 import skimage
 import math
 import sys
-import cv2 as cv
 
 
 #TO DETECT CLUSTERS/OBJ
@@ -71,9 +70,9 @@ class Detector():
 
         for i in range(noOfSquares):
             #CONVERT TO GRAYSCALE
-            beforeGray = cv.cvtColor(beforeSmallerFrame[i], cv.COLOR_BGR2GRAY)
-            currentGray = cv.cvtColor(currentSmallerFrame[i], cv.COLOR_BGR2GRAY)
-            nextGray = cv.cvtColor(nextSmallerFrame[i], cv.COLOR_BGR2GRAY)
+            beforeGray = skimage.color.rgb2gray(beforeSmallerFrame[i])
+            currentGray = skimage.color.rgb2gray(currentSmallerFrame[i])
+            nextGray = skimage.color.rgb2gray(nextSmallerFrame[i])
 
 
             #GET ABS DIFFERENCE AND STORE THEM
@@ -189,7 +188,7 @@ class Detector():
         cueLowerBound = self.cueLowerBound
         cueUpperBound = self.cueUpperBound
 
-        currentGray = cv.cvtColor(self.currentFrame, cv.COLOR_BGR2GRAY)
+        currentGray = skimage.color.rgb2gray(self.currentFrame)
 
         #BINARY IMG CONTAINING CLUSTERS
         binaryImg = self.detectSmallObj()

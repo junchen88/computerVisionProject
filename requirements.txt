@@ -4,4 +4,3 @@ scikit-image
 PyQt5
 PythonQwt
 pandas
-opencv-python-headless
