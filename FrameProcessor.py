@@ -12,7 +12,7 @@ class FrameProcessor:
         self.gtInform = gtInform
 
         # Start at one-past-the-start of the frame range
-        self.frameIdx = frames.inputFrameRange[0] + 1
+        self.frameIdx = frames.getFirstIdx() + 1
 
         #TO STORE ALL THE VALUES FOR PRINTING CHART, EACH ELEMENT = FOR EACH FRAME
         self.listOfPrecision = []
@@ -25,15 +25,15 @@ class FrameProcessor:
     def processNextFrame(self):
         # If we're at the last frame, there's nothing more to do
         # because we stop at one-before-the-end
-        if self.frameIdx == self.frames.inputFrameRange[1]:
+        if self.frames.isLastIdx(self.frameIdx):
             print("info: Finished!")
             return
 
         print("info: Working on frame {} to frame {}...".format(self.frameIdx - 1, self.frameIdx + 1))
 
-        prevFrame = self.frames.loadFrame(self.frameIdx - 1)
-        currFrame = self.frames.loadFrame(self.frameIdx)
-        nextFrame = self.frames.loadFrame(self.frameIdx + 1)
+        prevFrame = self.frames.load(self.frameIdx - 1)
+        currFrame = self.frames.load(self.frameIdx)
+        nextFrame = self.frames.load(self.frameIdx + 1)
 
         detector = Detector(prevFrame, currFrame, nextFrame, self.cueLowerBound, self.cueUpperBound, self.gtInform, self.frameIdx)
 

@@ -81,32 +81,26 @@ class Parser:
 
 
 class FrameSetLoader:
-
     def __init__(self, imageName, imageType, frameRange):
-        self.frameRange = []
-        self.inputFrameRange = frameRange
-        self.imageName = imageName
-        self.imageType = imageType
         self.parser = Parser(imageName, imageType)
-
-    def getImagesPath(self):
         self.allImagePath = self.parser.getFilePath('img')
 
+        if frameRange is None:
+            self.frameRange = [0, len(self.allImagePath)]
+        else:
+            self.frameRange = frameRange
 
-    def loadFrame(self, frame):
-        frameRange = self.frameRange
-        if frame >= frameRange[0] and frame <= self.frameRange[1]:
-            img = skimage.io.imread(self.allImagePath[frame-1])
+        print("info: Working on frames from frame {} to frame {}...".format(*self.frameRange))
 
-            return img
+    def load(self, frameIdx):
+        if self.frameRange[0] <= frameIdx <= self.frameRange[1]:
+            return skimage.io.imread(self.allImagePath[frameIdx - 1])
 
         else:
-            print("EXCEEDED THE RANGE OF FRAMES, PLEASE RESTART APP...")
-            quit()
+            raise ValueError("FrameSetLoader: Attempted to load out-of-range frame")
 
-    def getFrameRange(self):
+    def getFirstIdx(self):
+        return self.frameRange[0]
 
-        self.frameRange = [0, len(self.allImagePath)]
-        #IF NO FRAME RANGE IS PROVIDED
-        if self.inputFrameRange is None:
-            self.inputFrameRange = self.frameRange
+    def isLastIdx(self, frameIdx):
+        return frameIdx == self.frameRange[1]

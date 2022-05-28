@@ -45,17 +45,11 @@ class MainApp:
             print("error:", str(e))
             return
 
-        #MAIN EXECUTION
-        #init
+        # Prepare to load frames
         loader = FrameSetLoader(imgName, objType, frameRange)
-        loader.getImagesPath()
-        loader.getFrameRange()
         gtInform = loader.parser.getGTInformation()
-        frameRange = loader.inputFrameRange
         #IMG PARSER NOW CONTAINS THE PATH TO FRAME, CAN
         #USE LOADFRAME() TO GET THE SPECIFIC FRAME
-
-        print("info: Working on frames from frame {} to frame {}...".format(frameRange[0], frameRange[1]))
 
         #INITIALISE TRACKER FOR TRACKING
         tracker = Tracker(STARTINGID, positionSTD, velocitySTD, accelerationSTD, movingObjSTD)
