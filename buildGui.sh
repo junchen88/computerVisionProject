@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-uiFileName="projectGui.ui"
-pyFileName="projectGui.py"
+uiFileName="ControlGuiBase.ui"
+pyFileName="ControlGuiBase.py"
 
 pyuic5 "$uiFileName" > "$pyFileName"
 

@@ -2,7 +2,7 @@
 # from trackClass import Tracker
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
-from projectGui import Ui_ControlGuiBase
+from ControlGuiBase import Ui_ControlGuiBase
 from assistClass import Image
 from trackClass import Tracker
 from detectClass import Detector
