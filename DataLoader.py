@@ -90,6 +90,8 @@ class FrameSetLoader:
         else:
             self.frameRange = frameRange
 
+        self.gtInfo = self.parser.getGTInformation()
+
         print("info: Working on frames from frame {} to frame {}...".format(*self.frameRange))
 
     def load(self, frameIdx):
@@ -98,6 +100,13 @@ class FrameSetLoader:
 
         else:
             raise ValueError("FrameSetLoader: Attempted to load out-of-range frame")
+
+    def getGroundTruth(self, frameIdx):
+        if self.frameRange[0] <= frameIdx <= self.frameRange[1]:
+            return self.gtInfo[frameIdx - 1]
+
+        else:
+            raise ValueError("FrameSetLoader: Ground truth index out-of-range")
 
     def getFirstIdx(self):
         return self.frameRange[0]

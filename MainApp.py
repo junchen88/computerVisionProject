@@ -3,8 +3,8 @@ from PyQt5.QtWidgets import QApplication, QDialog
 from ControlGui import Ui_ControlGui
 from DataLoader import FrameSetLoader
 from FrameProcessor import FrameProcessor
-
-from trackClass import Tracker
+from ObjectDetector import ObjectDetector
+from ObjectTracker import TrackerState
 
 STARTINGID = 0
 
@@ -46,25 +46,27 @@ class MainApp:
             return
 
         # Prepare to load frames
-        loader = FrameSetLoader(imgName, objType, frameRange)
-        gtInform = loader.parser.getGTInformation()
-        #IMG PARSER NOW CONTAINS THE PATH TO FRAME, CAN
-        #USE LOADFRAME() TO GET THE SPECIFIC FRAME
+        frames = FrameSetLoader(imgName, objType, frameRange)
+        gtInform = frames.parser.getGTInformation()
 
-        #INITIALISE TRACKER FOR TRACKING
-        tracker = Tracker(STARTINGID, positionSTD, velocitySTD, accelerationSTD, movingObjSTD)
+        # Initialize detector parameters
+        detector = ObjectDetector(0, 121, 0, 1, 0, 11, 0, 1)
+
+        # Initialize tracking state from user-supplied values
+        tracker = TrackerState(STARTINGID, positionSTD, velocitySTD, accelerationSTD, movingObjSTD)
 
         # Create a new frame processor primed with the current frame set
-        self.processor = FrameProcessor(loader, tracker, cueLowerBound, cueUpperBound, gtInform)
+        self.processor = FrameProcessor(frames, detector, tracker)
 
     # Do one frame of object detection
     def stepDetector(self):
         # Do the actual small object track processing
-        self.processor.processNextFrame()
+        currFrame = self.processor.processNextFrame()
 
-        # Then display the result on the screen
-        print('info: Step finished, showing results...')
-        self.ui.showFrame(self.processor.thisFrame)
+        if currFrame is not None:
+            # Then display the result on the screen
+            print('info: Step finished, showing results...')
+            self.ui.showFrame(currFrame)
 
 
 # Run the main application when invoked on the command line

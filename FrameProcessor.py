@@ -1,15 +1,10 @@
 import numpy as np
 
-from detectClass import Detector
-
 class FrameProcessor:
-    def __init__(self, frames, tracker, cueLowerBound, cueUpperBound, gtInform):
+    def __init__(self, frames, detector, tracker):
         self.frames = frames
+        self.detector = detector
         self.tracker = tracker
-
-        self.cueLowerBound = cueLowerBound
-        self.cueUpperBound = cueUpperBound
-        self.gtInform = gtInform
 
         # Start at one-past-the-start of the frame range
         self.frameIdx = frames.getFirstIdx() + 1
@@ -35,12 +30,16 @@ class FrameProcessor:
         currFrame = self.frames.load(self.frameIdx)
         nextFrame = self.frames.load(self.frameIdx + 1)
 
-        detector = Detector(prevFrame, currFrame, nextFrame, self.cueLowerBound, self.cueUpperBound, self.gtInform, self.frameIdx)
+        # Do candidate small objects detection
+        candidates = self.detector.detectCandidates(prevFrame, currFrame, nextFrame)
 
-        #BOXES = BOUNDING BOXES, CENTROIDS = LIST OF CENTROIDS,(FOR KALMAN) PRECISION RECALL AND F1 IS DATA FOR CHART
-        boxes, centroids, precision, recall, F1, truePositive, falsePositive, falseNegative = detector.detectObjAndDiscrim()
-        # test
-        print(centroids)
+        # Discriminate over candidate matches
+        currGroundTruth = self.frames.getGroundTruth(self.frameIdx)
+        boxes, centroids, precision, recall, F1, truePositive, falsePositive, falseNegative \
+         = self.detector.discriminateCandidates(currFrame, candidates, currGroundTruth)
+
+        if centroids:
+            print("note: Found centroids:", centroids)
 
         self.listOfPrecision.append(precision)
         self.listOfRecall.append(recall)
@@ -48,12 +47,11 @@ class FrameProcessor:
         self.listOfTruePositive.append(truePositive)
         self.listOfFalsePositive.append(falsePositive)
         self.listOfFalseNegative.append(falseNegative)
-
+        
         centroids = np.asarray(centroids)
-
-        #UPDATE/ADD/DELETE TRACKS
+        
+        # Now, update tracks
         self.tracker.update(centroids)
-
-        # For later access, save aside current frame data
-        self.thisFrame = currFrame
         self.frameIdx = self.frameIdx + 1
+
+        return currFrame

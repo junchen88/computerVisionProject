@@ -2,7 +2,7 @@ import math
 import numpy as np
 from scipy import optimize
 
-from KalmanClass import Kalman
+from KalmanFilter import Kalman
 
 class Track():
     """ Track Class for each Obj"""
@@ -15,7 +15,7 @@ class Track():
 
 
 #FOR TRACKING
-class Tracker():
+class TrackerState():
     """ Tracker class that stores and update each track obj """
 
     def __init__(self, trackIDStart, positionSTD, velocitySTD, accelerationSTD, movingObjSTD):
