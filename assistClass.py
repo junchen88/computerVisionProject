@@ -80,7 +80,7 @@ class Parser:
 
 
 
-class Image:
+class FrameSetLoader:
 
     def __init__(self, imageName, imageType, frameRange):
         self.frameRange = []
