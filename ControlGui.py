@@ -74,10 +74,12 @@ class ControlGui(ControlGuiBase):
         lowerRange = int(lowerRange)
         upperRange = int(upperRange)
 
-        if lowerRange < 0 or upperRange < 0 or lowerRange >= upperRange:
+        if lowerRange < 1 or upperRange < 1 or lowerRange > upperRange:
             raise ValueError("Ui_ControlGui: Invalid frame range provided")
 
-        return lowerRange, upperRange
+        # Convert one-based indexing of the data sets to zero-based for
+        # Python-internal use
+        return lowerRange - 1, upperRange - 1
 
     # Get the user-provided cue bounds
     def getCueBounds(self):

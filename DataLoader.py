@@ -90,7 +90,9 @@ class FrameSetLoader:
 
         self.gtInfo = self.parser.getGTInformation()
 
-        print("info: Working on frames from frame {} to frame {}...".format(*self.frameRange))
+        # Display to the user as one-based
+        print("info: Working on frames from frame {} to frame {}...".format(
+            self.frameRange[0] + 1, self.frameRange[1] + 1))
 
     def load(self, frameIdx):
         if self.frameRange[0] <= frameIdx <= self.frameRange[1]:

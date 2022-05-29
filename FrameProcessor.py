@@ -38,7 +38,8 @@ class FrameProcessor:
             print("info: Finished!")
             return
 
-        print("info: Working on frame {} to frame {}...".format(self.frameIdx - 1, self.frameIdx + 1))
+        # Fudge one-based indexing when printing to the user
+        print("info: Working on frame {} to frame {}...".format(self.frameIdx, self.frameIdx + 2))
 
         prevFrame = self.frames.load(self.frameIdx - 1)
         currFrame = self.frames.load(self.frameIdx)
